@@ -88,7 +88,7 @@
     <div id="taskModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay opacity-0 pointer-events-none">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-all duration-300" id="taskModalContent">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="text-xl font-bold text-slate-900" id="modalTitle">Register Action</h3>
+                <h3 class="text-xl font-bold text-slate-900" id="modalTitle">Add Action</h3>
                 <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition text-2xl">&times;</button>
             </div>
             <form id="taskForm" class="p-8 space-y-4">
@@ -136,7 +136,7 @@
     </div>
 
     <!-- MODAL: NUDGE -->
-    <div id="nudgeModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay opacity-0 pointer-events-none">
+    <!-- <div id="nudgeModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay opacity-0 pointer-events-none">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-all duration-300">
             <div class="p-6 border-b border-slate-100 flex items-center gap-3">
                 <div id="nudgeIcon" class="text-3xl">💬</div>
@@ -163,7 +163,37 @@
                 </div>
             </div>
         </div>
+    </div> -->
+
+    <div id="nudgeModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay opacity-0 pointer-events-none">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-all duration-300">
+            <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+                <div id="nudgeIcon" class="text-3xl">💬</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900">Direct Message</h3>
+                    <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest" id="nudgePlatform"></p>
+                </div>
+            </div>
+            <div class="p-8 space-y-4">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Specialist</p>
+                    <p class="font-bold text-slate-800" id="nudgeRecipient"></p>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Message Content</label>
+                    <textarea id="nudgeMessageInput" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 focus:ring-2 focus:ring-ps-teal outline-none text-sm resize-none" placeholder="Enter custom message..."></textarea>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="closeNudge()" class="flex-1 px-4 py-3 border border-slate-200 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition">Cancel</button>
+                    <button onclick="confirmNudge()" class="flex-1 px-4 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-black transition flex items-center justify-center gap-2 shadow-lg">
+                        <span>Sent</span>
+                        <span class="text-lg">⚡</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+
 
     <!-- MODAL: DELETE -->
     <div id="deleteModal" class="fixed inset-0 z-[80] flex items-center justify-center p-4 modal-overlay opacity-0 pointer-events-none">
@@ -328,7 +358,7 @@
                                 <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Detail & Reference</th>
                                 <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Responsible Owner</th>
                                 <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
-                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Target</th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Deadline</th>
                                 <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Manage</th>
                                 <th class="px-8 py-5 text-[10px] font-black text-white uppercase tracking-widest text-center bg-ps-teal">Sync</th>
                             </tr>
@@ -392,49 +422,49 @@
                     </p>
                 </div>
                 <div>
-                    <h5 class="font-bold text-sm mb-3 text-[color:var(--ps-teal)]">Headquarters</h5>
+                    <h5 class="font-bold text-sm mb-3 text-[color:var(--ps-teal)]">Headquarter</h5>
                     <p class="text-xs text-slate-400">Nagpur, Maharashtra, India</p>
-                    <p class="text-xs text-slate-400 mt-1">Hyderabad, India</p>
                 </div>
                 <div>
                     <h5 class="font-bold text-sm mb-3 text-[color:var(--ps-teal)]">Global</h5>
-                    <p class="text-xs text-slate-400">Wisconsin, USA</p>
-                    <p class="text-xs text-slate-400 mt-1">Muscat, Oman</p>
+                    <p class="text-xs text-slate-400 mt-1">Hyderabad, Telangana, India</p>
+                    <p class="text-xs text-slate-400">Hartland Wisconsin, USA</p>
+                    <p class="text-xs text-slate-400 mt-1">Duqm, Oman</p>
                 </div>
             </div>
             <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-[10px] text-slate-500 uppercase tracking-widest">&copy; 2026 Perpetual Solutions. All Rights Reserved.</p>
                 <div class="flex gap-4">
                     <span class="w-2 h-2 rounded-full bg-[color:var(--ps-teal)]"></span>
-                    <span class="text-[10px] font-bold text-slate-500 uppercase">Prototype v2.1 (Anurag Yamnurwar)</span>
+                    <span class="text-[10px] font-bold text-slate-500 uppercase">Prototype by Anurag Yamnurwar</span>
                 </div>
             </div>
         </div>
     </footer>
 
 
-    <script>
+        <script>
         // --- DATA LAYER ---
         const specialists = {
             "Anurag": { role: "IT Engineer", avatar: "AY", bg: "bg-purple-100 text-purple-700", slack: "@anurag_it", discord: "anurag#777" },
-            "Avinash Sir": { role: "MD", avatar: "AG", bg: "bg-slate-900 text-white", slack: "@avinash_md", discord: "avinash#111" },
-            "Swapnil Sir": { role: "ED", avatar: "SK", bg: "bg-blue-100 text-blue-700", slack: "@swapnil_ed", discord: "swapnil#222" },
+            "Avinash Gore": { role: "MD", avatar: "AG", bg: "bg-slate-900 text-white", slack: "@avinash_md", discord: "avinash#111" },
+            "Swapnil": { role: "ED", avatar: "SK", bg: "bg-blue-100 text-blue-700", slack: "@swapnil_ed", discord: "swapnil#222" },
             "Saksham": { role: "Chem Engineer", avatar: "SM", bg: "bg-orange-100 text-orange-700", slack: "@saksham_ce", discord: "saksham#333" },
             "Kalyani": { role: "Chem Engineer", avatar: "KN", bg: "bg-rose-100 text-rose-700", slack: "@kalyani_ce", discord: "kalyani#444" },
-            "Rohan": { role: "Admin & HR", avatar: "RU", bg: "bg-green-100 text-green-700", slack: "@rohan_hr", discord: "rohan#555" }
+            "Rohan": { role: "Admin & HR", avatar: "RH", bg: "bg-green-100 text-green-700", slack: "@rohan_hr", discord: "rohan#555" }
         };
 
         let actions = [
-            { id: 1, desc: "HAZOP Review: Cooling loop optimization", person: "Avinash Sir", dept: "Management", status: "In Progress", target: "2025-06-15" },
-            { id: 2, desc: "HAZOP Software Prototype", person: "Anurag", dept: "IT & Digitalization", status: "In Progress", target: "2025-06-01" },
-            { id: 3, desc: "Energy Audit: Plant efficiency final report", person: "Swapnil Sir", dept: "Management", status: "Completed", target: "2025-05-28" },
-            { id: 4, desc: "HPCL Pre-Hazop", person: "Saksham", dept: "Management", status: "Completed", target: "2025-05-28" }
+            { id: 1, desc: "HAZOP Review: Unit 4 reactor safety audit", person: "Avinash Gore", dept: "Management", status: "In Progress", target: "2025-06-15" },
+            { id: 2, desc: "LMS Deployment: Safety training modules v2", person: "Anurag", dept: "IT & Digitalization", status: "In Progress", target: "2025-06-01" },
+            { id: 3, desc: "Energy Audit: Monthly plant report", person: "Swapnil", dept: "Management", status: "Completed", target: "2025-05-28" },
+            { id: 4, desc: "Scribe detail: LOPA safety documentation", person: "Saksham", dept: "Chemical Engineering", status: "Overdue", target: "2025-05-20" }
         ];
 
         let nudgeCount = 0; let chartInstances = {}; const TODAY = new Date("2025-06-01");
         let activeNudgeContext = null; let taskToDeleteId = null;
 
-        // --- UI CORE ---
+        // --- CORE UI ---
         function refresh() {
             renderTable(); updateKPIs(); updateCharts();
         }
@@ -452,15 +482,37 @@
 
             filtered.forEach(t => {
                 const spec = specialists[t.person];
+                const isLate = (t.status !== 'Completed' && new Date(t.target) < TODAY);
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-50";
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-50 group";
                 tr.innerHTML = `
-                    <td class="px-8 py-5"><p class="text-xs font-bold text-slate-800">${t.desc}</p><p class="text-[9px] text-slate-400 font-mono mt-0.5">PS-ID-0${t.id}</p></td>
-                    <td class="px-8 py-5"><div class="flex items-center gap-3 justify-center"><div class="w-8 h-8 rounded-lg ${spec.bg} flex items-center justify-center text-[10px] font-black shadow-sm">${spec.avatar}</div><div class="text-left"><p class="text-xs font-bold text-slate-700 leading-none">${t.person}</p><p class="text-[9px] text-slate-400 mt-1 uppercase font-bold tracking-tighter">${spec.role}</p></div></div></td>
+                    <td class="px-8 py-5">
+                        <p class="text-xs font-bold text-slate-800">${t.desc}</p>
+                        <p class="text-[9px] text-slate-400 font-mono mt-0.5 uppercase">ID: PS-ACT-00${t.id} | ${t.dept}</p>
+                    </td>
+                    <td class="px-8 py-5">
+                        <div class="flex items-center gap-3 justify-center">
+                            <div class="w-8 h-8 rounded-lg ${spec.bg} flex items-center justify-center text-[10px] font-black">${spec.avatar}</div>
+                            <div class="text-left min-w-[100px]">
+                                <p class="text-xs font-bold text-slate-700 leading-none">${t.person}</p>
+                                <p class="text-[9px] text-slate-400 mt-1 uppercase font-bold tracking-tighter">${spec.role}</p>
+                            </div>
+                        </div>
+                    </td>
                     <td class="px-8 py-5 text-center"><span class="tag ${getStatusClass(t.status)}">${t.status}</span></td>
-                    <td class="px-8 py-5 text-center"><span class="text-[11px] font-mono font-bold">${t.target}</span></td>
-                    <td class="px-8 py-5 text-center"><div class="flex justify-center gap-2"><button onclick="editTask(${t.id})" class="p-2 bg-slate-100 hover:bg-ps-teal hover:text-white rounded-xl transition text-xs shadow-sm">✎</button><button onclick="openDeleteModal(${t.id})" class="p-2 bg-slate-100 hover:bg-red-600 hover:text-white rounded-xl transition text-xs shadow-sm">🗑</button></div></td>
-                    <td class="px-8 py-5 bg-teal-50/10 text-center"><div class="flex justify-center gap-4"><button onclick="openNudge('Slack', '${t.person}', '${t.desc}')" class="nudge-icon-btn text-xl">💬</button><button onclick="openNudge('Discord', '${t.person}', '${t.desc}')" class="nudge-icon-btn text-xl">👾</button></div></td>
+                    <td class="px-8 py-5 text-center"><span class="text-[11px] font-mono font-bold ${isLate ? 'text-red-500' : 'text-slate-500'}">${t.target}</span></td>
+                    <td class="px-8 py-5 text-center">
+                        <div class="flex justify-center gap-2">
+                            <button onclick="editTask(${t.id})" class="p-2 bg-slate-100 hover:bg-ps-teal hover:text-white rounded-xl transition text-xs shadow-sm">✎</button>
+                            <button onclick="openDeleteModal(${t.id})" class="p-2 bg-slate-100 hover:bg-red-600 hover:text-white rounded-xl transition text-xs shadow-sm">🗑</button>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5 bg-teal-50/10 text-center">
+                        <div class="flex justify-center gap-4">
+                            <button onclick="openNudge('Whatsapp', '${t.person}', '${t.desc}')" class="nudge-icon-btn text-xl"> <img src="assets/Whatsapp Logo.png" alt="Whatsapp" class="h-7 w-auto object-contain"/> </button>
+                            <button onclick="openNudge('Slack', '${t.person}', '${t.desc}')" class="nudge-icon-btn text-xl"> <img src="assets/Slack Logo.png" alt="Slack" class="h-5 w-auto object-contain"/> </button>
+                        </div>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -475,10 +527,10 @@
             document.getElementById('statSyncs').innerText = nudgeCount;
         }
 
-        // --- CRUD LOGIC ---
+        // --- MODAL & CRUD ---
         function openModal(isEdit = false) {
             const m = document.getElementById('taskModal');
-            document.getElementById('modalTitle').innerText = isEdit ? "Modify Action Detail" : "Register Industrial Action";
+            document.getElementById('modalTitle').innerText = isEdit ? "Modify Action Detail" : "Add Action";
             if(!isEdit) { document.getElementById('taskForm').reset(); document.getElementById('editTaskId').value = ''; }
             m.classList.remove('opacity-0', 'pointer-events-none');
             document.getElementById('taskModalContent').classList.remove('scale-95');
@@ -496,7 +548,10 @@
                 target: document.getElementById('formDate').value
             };
             if(id) { const idx = actions.findIndex(t => t.id === parseInt(id)); actions[idx] = taskObj; notify('UPDATE', 'Revised.'); }
-            else { actions.push(taskObj); notify('CREATED', 'Assigned.'); document.getElementById('personFilter').value = 'All'; document.getElementById('deptFilter').value = 'All'; }
+            else { 
+                actions.push(taskObj); notify('CREATED', 'Assigned.'); 
+                document.getElementById('personFilter').value = 'All'; document.getElementById('deptFilter').value = 'All';
+            }
             closeModal(); refresh();
         }
         function editTask(id) {
@@ -509,21 +564,19 @@
             document.getElementById('formDate').value = t.target;
             openModal(true);
         }
-        function openDeleteModal(id) {
-            taskToDeleteId = id;
-            document.getElementById('deleteModal').classList.remove('opacity-0', 'pointer-events-none');
-        }
+
+        // --- DELETE DIALOG ---
+        function openDeleteModal(id) { taskToDeleteId = id; document.getElementById('deleteModal').classList.remove('opacity-0', 'pointer-events-none'); }
         function closeDeleteModal() { document.getElementById('deleteModal').classList.add('opacity-0', 'pointer-events-none'); }
         document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
-            if(taskToDeleteId) { actions = actions.filter(t => t.id !== taskToDeleteId); refresh(); notify('DELETED', 'Record removed.'); }
+            if(taskToDeleteId) { actions = actions.filter(t => t.id !== taskToDeleteId); refresh(); notify('DELETED', 'Removed.'); }
             closeDeleteModal();
         });
 
-        // --- NUDGES ---
         function openNudge(plat, name, task) {
             activeNudgeContext = { plat, name, task };
             document.getElementById('nudgePlatform').innerText = plat;
-            document.getElementById('nudgeTarget').innerText = name + ' (' + specialists[name].slack + ')';
+            document.getElementById('nudgeRecipient').innerText = name + ' (' + specialists[name].slack + ')';
             document.getElementById('nudgeMessageInput').value = `Hello ${name.split(' ')[0]}, requesting update on industrial task: "${task}". Status is ${actions.find(a=>a.desc === task).status}.`;
             document.getElementById('nudgeModal').classList.remove('opacity-0', 'pointer-events-none');
         }
@@ -549,12 +602,12 @@
             const ctx1 = document.getElementById('statusChart').getContext('2d');
             chartInstances.status = new Chart(ctx1, {
                 type: 'doughnut', data: { labels: ['Done', 'Progress', 'Late', 'Wait'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#10b981', '#0ea5e9', '#ef4444', '#cbd5e1'], borderWidth: 0, hoverOffset: 15 }] },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 6, font: { weight: 'bold', size: 10 } } } } }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 6, font: { weight: 'bold', size: 10 } } } } }
             });
             const ctx2 = document.getElementById('workloadChart').getContext('2d');
             chartInstances.workload = new Chart(ctx2, {
                 type: 'bar', data: { labels: [], datasets: [{ data: [], backgroundColor: '#00b8b8', borderRadius: 8, barThickness: 24 }] },
-                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true }, y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } } } }
+                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } }, y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } } } }
             });
         }
 
@@ -580,6 +633,7 @@
             if(pFilt) pFilt.innerHTML = `<option value="All">ALL SPECIALISTS</option>` + pFilt.innerHTML;
             if(pFilt) pFilt.addEventListener('change', refresh);
             document.getElementById('deptFilter').addEventListener('change', refresh);
+            document.getElementById('resetFilters').addEventListener('click', () => { pFilt.value = 'All'; document.getElementById('deptFilter').value = 'All'; refresh(); });
             document.getElementById('taskForm').addEventListener('submit', saveTask);
             initCharts(); refresh();
         };
