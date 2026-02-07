@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perpetual Solutions | Action Tracking Tools</title>
+    <title>Perpetual Solutions | Industrial Command Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
         
         :root {
-            /* Palette derived from the uploaded logo image */
             --ps-teal: #00b8b8; 
             --ps-teal-dark: #008f8f;
             --ps-grey: #e2e8f0;
@@ -22,178 +21,207 @@
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background-color: #f8fafc;
             color: var(--ps-slate);
+            scroll-behavior: smooth;
         }
 
-        /* Chart Container Styling - Mandatory Strict Constraints */
+        /* Chart Constraints */
         .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+            position: relative; width: 100%; max-width: 600px; margin: auto; height: 300px; max-height: 400px;
         }
 
-        /* Custom Scrollbar */
+        /* Scrollbar */
         .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        /* CSS Logo Recreation (No SVG) */
+        /* Logo Recreation */
         .logo-wrapper {
-            position: relative;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        .logo-base {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: #d1d5db; /* Light grey base */
-            border-radius: 50%;
-        }
+        .logo-base { position: absolute; width: 100%; height: 100%; background: #d1d5db; border-radius: 50%; }
         .logo-blade {
-            position: absolute;
-            width: 20%;
-            height: 40%;
-            background-color: #6b7280; /* Darker grey blade */
-            border-radius: 50% 50% 10% 10%;
-            top: 10%;
-            left: 40%;
-            transform-origin: 50% 100%;
+            position: absolute; width: 20%; height: 40%; background: #6b7280; border-radius: 50% 50% 10% 10%; top: 10%; left: 40%; transform-origin: 50% 100%;
         }
-        .logo-dot {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background-color: #ef4444; /* Red dot */
-            border-radius: 50%;
-            z-index: 10;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-        .logo-center {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background-color: #000;
-            border-radius: 50%;
-            z-index: 20;
-        }
+        .logo-dot { position: absolute; width: 5px; height: 5px; background: #ef4444; border-radius: 50%; z-index: 10; }
+        .logo-center { position: absolute; width: 6px; height: 6px; background: #000; border-radius: 50%; z-index: 20; }
 
-        /* Toast Notification */
-        .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 50;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            pointer-events: none;
+        /* Unified Card Hover Effect (The "Wow" Factor) */
+        .expert-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--ps-grey);
+            background: white;
         }
-        .toast-item {
-            background: #1e293b;
-            color: white;
-            padding: 16px 20px;
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transform: translateX(120%);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: auto;
-            border-left: 4px solid var(--ps-teal);
-            min-width: 300px;
+        .expert-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--ps-teal);
+            box-shadow: 0 20px 25px -5px rgba(0, 184, 184, 0.1), 0 10px 10px -5px rgba(0, 184, 184, 0.04);
+            background: #f0fdfa; /* Very slight teal tint */
         }
-        .toast-item.show { transform: translateX(0); }
+        .expert-card:hover .icon-box {
+            transform: scale(1.1) rotate(5deg);
+            background: white;
+        }
 
         /* Status Tags */
-        .tag {
-            padding: 4px 10px;
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .status-completed { background: #dcfce7; color: #166534; }
-        .status-progress { background: #e0f2fe; color: #0369a1; }
-        .status-pending { background: #f1f5f9; color: #475569; }
-        .status-overdue { background: #fee2e2; color: #991b1b; }
+        .tag { padding: 4px 10px; font-size: 10px; font-weight: 700; border-radius: 6px; text-transform: uppercase; }
+        .st-completed { background: #dcfce7; color: #166534; }
+        .st-progress { background: #e0f2fe; color: #0369a1; }
+        .st-notstarted { background: #f1f5f9; color: #475569; }
+        .st-overdue { background: #fee2e2; color: #991b1b; }
 
-        /* Animations */
-        .hover-lift { transition: transform 0.2s; }
-        .hover-lift:hover { transform: translateY(-2px); }
+        .modal-overlay {
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); transition: all 0.3s ease;
+        }
+
+        .kpi-card { transition: all 0.3s ease; }
+        .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); }
+        
+        .nudge-icon-btn { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .nudge-icon-btn:hover { transform: scale(1.2); }
     </style>
-    <!-- Chosen Palette: Perpetual Teal (Brand Color) + Industrial Grey -->
-    <!-- Application Structure Plan: 
-         1. Header: Recreated CSS Logo & Navigation.
-         2. Hero: Company Mission & "Baby Steps in IT" Context.
-         3. Operations Dashboard: KPI Cards & Charts (Workload vs Status).
-         4. Action Tracker: The core interactive element. Maps specific employees (Anurag, Avinash, etc.) to their specialized roles (IT, HAZOP, Energy). Includes Slack/Discord triggers.
-         5. Services Grid: Overview of the 5 business pillars.
-         6. Footer: Global presence info.
-    -->
-    <!-- Visualization & Content Choices:
-         - Charts: Chart.js for "Task Distribution" (Donut) and "Specialist Workload" (Bar).
-         - Data: Hardcoded mock data reflecting the specific roles (Anurag=IT, Saksham=Chem, etc.).
-         - Interaction: Filtering the table updates the charts dynamically. Nudge buttons trigger simulated API calls via Toasts.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
 <body class="bg-slate-50">
 
     <div id="toast-container" class="toast-container"></div>
 
+    <!-- MODAL: ADD/EDIT TASK -->
+    <div id="taskModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay opacity-0 pointer-events-none">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-all duration-300" id="taskModalContent">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-xl font-bold text-slate-900" id="modalTitle">Register Action</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition text-2xl">&times;</button>
+            </div>
+            <form id="taskForm" class="p-8 space-y-4">
+                <input type="hidden" id="editTaskId">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Action Description</label>
+                    <input type="text" id="formDesc" required placeholder="Describe task..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-ps-teal outline-none text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Owner</label>
+                        <select id="formOwner" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-ps-teal outline-none text-sm"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Sector</label>
+                        <select id="formDept" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-ps-teal outline-none text-sm">
+                            <option value="Management">Management</option>
+                            <option value="Chemical Engineering">Chemical Engineering</option>
+                            <option value="IT & Digitalization">IT & Digitalization</option>
+                            <option value="Admin & HR">Admin & HR</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">State</label>
+                        <select id="formStatus" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-ps-teal outline-none text-sm">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Overdue">Overdue</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Deadline</label>
+                        <input type="date" id="formDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-ps-teal outline-none text-sm">
+                    </div>
+                </div>
+                <div class="pt-6 flex gap-3">
+                    <button type="button" onclick="closeModal()" class="flex-1 px-4 py-3 border border-slate-200 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition">Cancel</button>
+                    <button type="submit" class="flex-1 px-4 py-3 bg-[color:var(--ps-teal)] text-white rounded-xl font-bold hover:bg-ps-teal-dark transition shadow-lg">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: NUDGE -->
+    <div id="nudgeModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay opacity-0 pointer-events-none">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-all duration-300">
+            <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+                <div id="nudgeIcon" class="text-3xl">💬</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900">Sync Ping</h3>
+                    <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest" id="nudgePlatform"></p>
+                </div>
+            </div>
+            <div class="p-8 space-y-4">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Specialist</p>
+                    <p class="font-bold text-slate-800" id="nudgeRecipient"></p>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Message Content</label>
+                    <textarea id="nudgeMessageInput" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 focus:ring-2 focus:ring-ps-teal outline-none text-sm resize-none" placeholder="Enter custom message..."></textarea>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="closeNudge()" class="flex-1 px-4 py-3 border border-slate-200 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition">Cancel</button>
+                    <button onclick="confirmNudge()" class="flex-1 px-4 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-black transition flex items-center justify-center gap-2 shadow-lg">
+                        <span>Ping Sync</span>
+                        <span class="text-lg">⚡</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: DELETE -->
+    <div id="deleteModal" class="fixed inset-0 z-[80] flex items-center justify-center p-4 modal-overlay opacity-0 pointer-events-none">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-all duration-300">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">!</div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Delete Record?</h3>
+                <p class="text-sm text-slate-500 mb-6">Confirming will remove this action from all operational reports.</p>
+                <div class="flex gap-3">
+                    <button onclick="closeDeleteModal()" class="flex-1 px-4 py-3 border border-slate-200 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition">Keep</button>
+                    <button id="confirmDeleteBtn" class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition">Remove</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation -->
-    <nav class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
+    <nav class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 h-20 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <!-- <div class="logo-wrapper">
+                    <div class="logo-base"></div>
+                    <div class="logo-blade" style="transform: rotate(0deg) translateY(-6px)"></div>
+                    <div class="logo-blade" style="transform: rotate(60deg) translateY(-6px)"></div>
+                    <div class="logo-blade" style="transform: rotate(120deg) translateY(-6px)"></div>
+                    <div class="logo-blade" style="transform: rotate(180deg) translateY(-6px)"></div>
+                    <div class="logo-blade" style="transform: rotate(240deg) translateY(-6px)"></div>
+                    <div class="logo-blade" style="transform: rotate(300deg) translateY(-6px)"></div>
+                    <div class="logo-dot" style="top: 12px; left: 22px;"></div>
+                    <div class="logo-dot" style="top: 18px; left: 32px;"></div>
+                    <div class="logo-dot" style="top: 30px; left: 32px;"></div>
+                    <div class="logo-dot" style="top: 34px; left: 22px;"></div>
+                    <div class="logo-dot" style="top: 30px; left: 12px;"></div>
+                    <div class="logo-dot" style="top: 18px; left: 12px;"></div>
+                    <div class="logo-center"></div>
+                </div> -->
+                <!-- <div>
+                    <h1 class="text-2xl font-black text-[color:var(--ps-teal)] tracking-tighter leading-none uppercase">Perpetual</h1>
+                    <p class="text-[10px] font-bold text-slate-800 tracking-[0.2em] uppercase">Solutions Core</p>
+                </div> -->
+
+                <div id="toast-container" class="toast-container"></div>
+
                 <!-- Logo Section -->
                 <div class="flex items-center gap-3">
                     <div class="flex items-center gap-3">
-    <img 
-        src="assets/PS Logo.gif"
-        alt="Perpetual Solutions Logo"
-        class="h-14 w-auto object-contain"
-    />
+                    <img 
+                        src="assets/PS Logo.gif"
+                        alt="Perpetual Solutions Logo"
+                        class="h-14 w-auto object-contain"
+                    />
     <div>
-        <!-- <h1 class="text-3xl font-black text-[color:var(--ps-teal)] tracking-tighter leading-none">
-            Perpetual
-        </h1>
-        <p class="text-sm font-bold text-slate-800 tracking-wide uppercase">
-            Solutions
-        </p> -->
-    </div>
-</div>
-                    <div>
-                        <!-- <h1 class="text-3xl font-black text-[color:var(--ps-teal)] tracking-tighter leading-none">Perpetual</h1>
-                        <p class="text-sm font-bold text-slate-800 tracking-wide uppercase">Solutions</p> -->
-                    </div>
-                </div>
-                
-                <!-- Desktop Nav -->
-                <div class="hidden md:flex gap-8 items-center">
-                    <a href="#dashboard" class="text-xs font-bold text-slate-500 uppercase tracking-widest hover:text-[color:var(--ps-teal)] transition">Dashboard</a>
-                    <a href="#tracker" class="text-xs font-bold text-slate-500 uppercase tracking-widest hover:text-[color:var(--ps-teal)] transition">Action Tracker</a>
-                    <a href="#services" class="text-xs font-bold text-slate-500 uppercase tracking-widest hover:text-[color:var(--ps-teal)] transition">Services</a>
-                </div>
 
-                <!-- Status Indicator -->
-                <div class="hidden lg:flex items-center gap-2 bg-teal-50 px-3 py-1 rounded-full border border-teal-100">
-                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span class="text-[10px] font-bold text-teal-700 uppercase">Login</span>
-                </div>
+            </div>
+            <div class="hidden md:flex gap-8 items-center text-xs font-bold text-slate-500 uppercase tracking-widest">
+                <a href="#overview" class="hover:text-ps-teal transition">Overview</a>
+                <a href="#tracker" class="hover:text-ps-teal transition">Database</a>
+                <a href="#services" class="hover:text-ps-teal transition">Expertise</a>
             </div>
         </div>
     </nav>
@@ -214,7 +242,7 @@
                     As we take our <strong>"next steps" into the IT industry</strong>, this platform serves as the central bridge—connecting our veteran Chemical Engineers (HAZOP, Process Safety) with our emerging Digital Team (LMS, Social Media).
                 </p>
                 <div class="flex gap-4">
-                    <button onclick="document.getElementById('tracker').scrollIntoView({behavior: 'smooth'})" class="bg-[color:var(--ps-teal)] text-white px-6 py-3 rounded-xl font-bold hover:bg-[color:var(--ps-teal-dark)] transition shadow-lg shadow-teal-200">
+                    <button onclick="document.getElementById('tracker').scrollIntoView({behavior: 'smooth'})" class="bg-[color:var(--ps-teal)] text-white px-6 py-3 rounded-xl font-bold hover:bg-ps-teal-dark transition shadow-lg shadow-teal-200">
                         View Active Tasks
                     </button>
                     <button onclick="document.getElementById('services').scrollIntoView({behavior: 'smooth'})" class="bg-white text-slate-700 border border-slate-300 px-6 py-3 rounded-xl font-bold hover:bg-slate-50 transition">
@@ -222,154 +250,134 @@
                     </button>
                 </div>
             </div>
-            <!-- Decorative Circle -->
             <div class="absolute -right-20 -top-20 w-96 h-96 bg-[color:var(--ps-teal)] rounded-full opacity-5 pointer-events-none"></div>
         </section>
 
-        <!-- KPI Dashboard -->
-        <section id="dashboard" class="scroll-mt-24">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-slate-900">Operational Overview</h2>
-                <p class="text-sm text-slate-500">Real-time metrics across Engineering, Management, and IT sectors.</p>
+        <!-- Operational Overview Block -->
+        <section id="overview" class="space-y-6 scroll-mt-24">
+            <div class="border-b border-slate-200 pb-4">
+                <h2 class="text-3xl font-black text-slate-900 uppercase tracking-tighter">Operational Overview</h2>
+                <p class="text-sm text-slate-500 font-bold uppercase tracking-widest mt-1">Real-time Performance Metrics</p>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover-lift">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Actions</p>
-                    <h3 id="kpi-total" class="text-3xl font-black text-slate-900 mt-2">0</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-[2.2rem] border border-slate-200 shadow-sm kpi-card">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Pipeline</p>
+                    <h3 id="statTotal" class="text-4xl font-black text-slate-900 mt-2">0</h3>
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover-lift">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Completion Rate</p>
-                    <h3 id="kpi-rate" class="text-3xl font-black text-[color:var(--ps-teal)] mt-2">0%</h3>
+                <div class="bg-white p-6 rounded-[2.2rem] border border-slate-200 shadow-sm kpi-card border-b-4 border-b-ps-teal">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Efficiency Ratio</p>
+                    <h3 id="statRate" class="text-4xl font-black text-[color:var(--ps-teal)] mt-2">0%</h3>
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover-lift">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Critical Overdue</p>
-                    <h3 id="kpi-overdue" class="text-3xl font-black text-[color:var(--ps-red)] mt-2">0</h3>
+                <div class="bg-white p-6 rounded-[2.2rem] border border-slate-200 shadow-sm kpi-card">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Critical Delays</p>
+                    <h3 id="statLate" class="text-4xl font-black text-red-600 mt-2">0</h3>
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover-lift border-l-4 border-l-[color:var(--ps-teal)]">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Nudges Sent</p>
-                    <h3 id="kpi-nudges" class="text-3xl font-black text-slate-900 mt-2">0</h3>
-                    <p class="text-[10px] text-slate-400 mt-1">Via Slack & Discord</p>
+                <div class="bg-slate-900 p-6 rounded-[2.2rem] shadow-xl text-white kpi-card">
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Digital Pings</p>
+                    <h3 id="statSyncs" class="text-4xl font-black text-[color:var(--ps-teal)] mt-2">0</h3>
                 </div>
             </div>
 
-            <!-- Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Task Status Distribution</h4>
-                    <div class="chart-container">
-                        <canvas id="statusChart"></canvas>
-                    </div>
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-8 border-b pb-4 flex justify-between">
+                        Project Progress <span>Status distribution</span>
+                    </h4>
+                    <div class="chart-container"><canvas id="statusChart"></canvas></div>
                 </div>
-                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Specialist Workload</h4>
-                    <div class="chart-container">
-                        <canvas id="workloadChart"></canvas>
-                    </div>
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-8 border-b pb-4 flex justify-between">
+                        Resource Load <span>Specialist allocation</span>
+                    </h4>
+                    <div class="chart-container"><canvas id="workloadChart"></canvas></div>
                 </div>
             </div>
         </section>
 
-        <!-- Master Action Tracker -->
-        <section id="tracker" class="scroll-mt-24">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900">Master Action Database</h2>
-                    <p class="text-sm text-slate-500 max-w-xl">
-                        Centralized task management. Use the filters to view specific departmental loads or individual assignments. 
-                        Click the messaging icons to trigger immediate updates to the team.
-                    </p>
+        <!-- Master Database Block -->
+        <section id="tracker" class="scroll-mt-24 space-y-6">
+            <div class="bg-white p-6 rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 border-b border-slate-100 pb-6 px-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-900">Master Action Database</h2>
+                        <p class="text-xs text-slate-400 mt-1 uppercase tracking-widest font-bold">Industrial Sync Gateway</p>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                        <button onclick="openModal()" class="bg-ps-teal text-white px-6 py-3 rounded-2xl font-bold text-xs hover:bg-ps-teal-dark transition shadow-lg shadow-teal-100 flex items-center gap-2">
+                            <span class="text-xl leading-none">+</span> Add Action
+                        </button>
+                        <div class="h-10 w-px bg-slate-200 mx-2 hidden lg:block"></div>
+                        <select id="personFilter" class="bg-slate-50 border border-slate-200 text-[11px] font-black uppercase rounded-xl px-4 py-3 min-w-[160px] outline-none shadow-sm focus:ring-2 focus:ring-ps-teal transition"></select>
+                        <select id="deptFilter" class="bg-slate-50 border border-slate-200 text-[11px] font-black uppercase rounded-xl px-4 py-3 outline-none shadow-sm focus:ring-2 focus:ring-ps-teal transition">
+                            <option value="All">All Sectors</option>
+                            <option value="Management">Management</option>
+                            <option value="Chemical Engineering">Chemical Engineering</option>
+                            <option value="IT & Digitalization">IT & Digitalization</option>
+                            <option value="Admin & HR">Admin & HR</option>
+                        </select>
+                        <button id="resetFilters" class="p-3 bg-slate-100 rounded-xl text-slate-400 hover:bg-slate-200 transition" title="Reset Filters">⟲</button>
+                    </div>
                 </div>
-                
-                <div class="flex gap-2 w-full md:w-auto">
-                    <select id="personFilter" class="bg-white border border-slate-200 text-xs font-bold rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--ps-teal)] shadow-sm">
-                        <option value="All">All Personnel</option>
-                    </select>
-                    <select id="deptFilter" class="bg-white border border-slate-200 text-xs font-bold rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--ps-teal)] shadow-sm">
-                        <option value="All">All Departments</option>
-                        <option value="Management">Management</option>
-                        <option value="IT & Digitalization">IT & Digitalization</option>
-                        <option value="Chemical Engineering">Chemical Engineering</option>
-                        <option value="Admin & HR">Admin & HR</option>
-                    </select>
-                </div>
-            </div>
 
-            <div class="bg-white rounded-[1.5rem] border border-slate-200 shadow-lg overflow-hidden">
-                <div class="overflow-x-auto custom-scrollbar">
+                <div class="overflow-x-auto custom-scrollbar px-4">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-slate-50 border-b border-slate-100">
-                            <tr>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Task Details</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Owner / Role</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Department</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Deadline</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-white uppercase tracking-widest text-center bg-[color:var(--ps-teal)]">Quick Action</th>
+                        <thead>
+                            <tr class="bg-slate-50/50">
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Detail & Reference</th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Responsible Owner</th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Target</th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Manage</th>
+                                <th class="px-8 py-5 text-[10px] font-black text-white uppercase tracking-widest text-center bg-ps-teal">Sync</th>
                             </tr>
                         </thead>
-                        <tbody id="actionTableBody" class="divide-y divide-slate-50">
-                            <!-- Rows injected by JS -->
-                        </tbody>
+                        <tbody id="actionTable" class="divide-y divide-slate-50"></tbody>
                     </table>
                 </div>
-                <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 text-center">
-                    <p class="text-[10px] text-slate-400 italic">Showing active tasks for Perpetual Solutions HQ</p>
-                </div>
             </div>
         </section>
 
-        <!-- Services / Business Info -->
-        <section id="services" class="scroll-mt-24 pt-8 border-t border-slate-200">
+        <!-- Core Expertise with Dynamic Hover (Requirement Met) -->
+        <section id="services" class="scroll-mt-24 pt-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-900">Our Expertise</h2>
-                <p class="text-slate-500 mt-2">Comprehensive solutions for industrial safety and digital transformation.</p>
+                <h2 class="text-3xl font-black text-slate-900 uppercase tracking-tighter">Core Expertise</h2>
+                <p class="text-slate-500 mt-2 font-medium">Sustainable. Safe. Reliable.</p>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 pb-20">
                 <!-- Card 1 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:border-[color:var(--ps-teal)] transition group">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mb-4 group-hover:bg-teal-50 transition">
-                        <span class="text-xl">⚠️</span>
-                    </div>
-                    <h3 class="font-bold text-sm text-slate-900 mb-2">Process Safety</h3>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">HAZOP studies, LOPA, and Process Hazard Analysis to reduce operational risks.</p>
+                <div class="expert-card p-6 rounded-[2rem]">
+                    <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl mb-4 icon-box transition-all duration-300">🛡️</div>
+                    <h3 class="font-bold text-sm text-slate-900 mb-2 uppercase tracking-wide">Process Safety</h3>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">HAZOP, LOPA, and PHA studies to minimize operational risk and protect assets.</p>
                 </div>
                 <!-- Card 2 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:border-[color:var(--ps-teal)] transition group">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mb-4 group-hover:bg-teal-50 transition">
-                        <span class="text-xl">🌱</span>
-                    </div>
-                    <h3 class="font-bold text-sm text-slate-900 mb-2">Sustainability</h3>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">Energy Audits, ESG reporting, and Green Building compliance.</p>
+                <div class="expert-card p-6 rounded-[2rem]">
+                    <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl mb-4 icon-box transition-all duration-300">🌱</div>
+                    <h3 class="font-bold text-sm text-slate-900 mb-2 uppercase tracking-wide">Sustainability</h3>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">ESG reporting, Energy Audits, and Green Roadmaps to drive corporate responsibility.</p>
                 </div>
                 <!-- Card 3 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:border-[color:var(--ps-teal)] transition group">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mb-4 group-hover:bg-teal-50 transition">
-                        <span class="text-xl">⚙️</span>
-                    </div>
-                    <h3 class="font-bold text-sm text-slate-900 mb-2">Process Improv.</h3>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">Simulation modeling, troubleshooting, and commissioning support.</p>
+                <div class="expert-card p-6 rounded-[2rem]">
+                    <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl mb-4 icon-box transition-all duration-300">⚙️</div>
+                    <h3 class="font-bold text-sm text-slate-900 mb-2 uppercase tracking-wide">Engineering</h3>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Advanced modeling, technical analysis, and industrial plant troubleshooting support.</p>
                 </div>
                 <!-- Card 4 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:border-[color:var(--ps-teal)] transition group">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mb-4 group-hover:bg-teal-50 transition">
-                        <span class="text-xl">🎓</span>
-                    </div>
-                    <h3 class="font-bold text-sm text-slate-900 mb-2">Training</h3>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">Competency programs for Safety, Fire, and Behavioral Safety (BBS).</p>
+                <div class="expert-card p-6 rounded-[2rem]">
+                    <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl mb-4 icon-box transition-all duration-300">🎓</div>
+                    <h3 class="font-bold text-sm text-slate-900 mb-2 uppercase tracking-wide">Training</h3>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Specialized competency programs and comprehensive safety compliance training.</p>
                 </div>
-                <!-- Card 5 (IT Highlight) -->
-                <div class="bg-teal-50 p-6 rounded-2xl border border-teal-200 hover:shadow-md transition">
-                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center mb-4">
-                        <span class="text-xl">💻</span>
-                    </div>
-                    <h3 class="font-bold text-sm text-[color:var(--ps-teal-dark)] mb-2">Digital Tools</h3>
-                    <p class="text-[11px] text-slate-600 leading-relaxed">Software for BRSR, HAZOP automation, and custom Action Trackers (like this one).</p>
+                <!-- Card 5 -->
+                <div class="expert-card p-6 rounded-[2rem]">
+                    <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl mb-4 icon-box transition-all duration-300">💻</div>
+                    <h3 class="font-bold text-sm text-ps-teal-dark mb-2 uppercase tracking-wide">Digital Tools</h3>
+                    <p class="text-[11px] text-slate-600 leading-relaxed italic font-medium">Proprietary software suite for industrial automation and compliance tracking.</p>
                 </div>
             </div>
         </section>
-
     </main>
 
     <!-- Footer -->
@@ -404,262 +412,177 @@
         </div>
     </footer>
 
-    <!-- Application Logic -->
+
     <script>
-        // --- DATA ---
-        
-        // Employee Mapping based on prompt
-        const employees = {
-            "Anurag": { role: "IT Engineer", dept: "IT & Digitalization", avatar: "AY", bg: "bg-purple-100 text-purple-700", slack: "@anurag_it", discord: "anurag#7777" },
-            "Avinash": { role: "Managing Director", dept: "Management", avatar: "AG", bg: "bg-slate-200 text-slate-700", slack: "@avinash_md", discord: "avinash#1111" },
-            "Swapnil": { role: "Executive Director", dept: "Management", avatar: "SK", bg: "bg-blue-100 text-blue-700", slack: "@swapnil_ed", discord: "swapnil#2222" },
-            "Saksham": { role: "Chemical Engineer", dept: "Chemical Engineering", avatar: "SM", bg: "bg-orange-100 text-orange-700", slack: "@saksham_ce", discord: "saksham#3333" },
-            "Kalyani": { role: "Chemical Engineer", dept: "Chemical Engineering", avatar: "KN", bg: "bg-rose-100 text-rose-700", slack: "@kalyani_ce", discord: "kalyani#4444" },
-            "Rohan": { role: "Admin & HR", dept: "Admin & HR", avatar: "RH", bg: "bg-green-100 text-green-700", slack: "@rohan_hr", discord: "rohan#5555" }
+        // --- DATA LAYER ---
+        const specialists = {
+            "Anurag": { role: "IT Engineer", avatar: "AY", bg: "bg-purple-100 text-purple-700", slack: "@anurag_it", discord: "anurag#777" },
+            "Avinash Sir": { role: "MD", avatar: "AG", bg: "bg-slate-900 text-white", slack: "@avinash_md", discord: "avinash#111" },
+            "Swapnil Sir": { role: "ED", avatar: "SK", bg: "bg-blue-100 text-blue-700", slack: "@swapnil_ed", discord: "swapnil#222" },
+            "Saksham": { role: "Chem Engineer", avatar: "SM", bg: "bg-orange-100 text-orange-700", slack: "@saksham_ce", discord: "saksham#333" },
+            "Kalyani": { role: "Chem Engineer", avatar: "KN", bg: "bg-rose-100 text-rose-700", slack: "@kalyani_ce", discord: "kalyani#444" },
+            "Rohan": { role: "Admin & HR", avatar: "RU", bg: "bg-green-100 text-green-700", slack: "@rohan_hr", discord: "rohan#555" }
         };
 
-        // Tasks mapped to roles
-        const initialTasks = [
-            { id: "TK-101", desc: "HAZOP Study: Reactor Unit 4 Safety Review", person: "Avinash", dept: "Management", status: "In Progress", target: "2025-06-15" },
-            { id: "TK-102", desc: "LMS: Upload 'Fire Safety' Module", person: "Anurag", dept: "IT & Digitalization", status: "Not Started", target: "2025-06-01" },
-            { id: "TK-103", desc: "Energy Audit: Monthly Power Consumption Report", person: "Swapnil", dept: "Management", status: "Completed", target: "2025-05-28" },
-            { id: "TK-104", desc: "Social Media: 'Sustainability Week' Post", person: "Anurag", dept: "IT & Digitalization", status: "In Progress", target: "2025-06-05" },
-            { id: "TK-105", desc: "Scribe Work: LOPA Documentation Draft", person: "Saksham", dept: "Chemical Engineering", status: "Overdue", target: "2025-05-20" },
-            { id: "TK-106", desc: "Accounts: Q1 Billing Consolidation", person: "Swapnil", dept: "Management", status: "In Progress", target: "2025-06-20" },
-            { id: "TK-107", desc: "Process Improvement: Catalyst Efficiency Model", person: "Kalyani", dept: "Chemical Engineering", status: "In Progress", target: "2025-06-10" },
-            { id: "TK-108", desc: "HR: Recruitment Drive (Nagpur Office)", person: "Rohan", dept: "Admin & HR", status: "In Progress", target: "2025-06-30" },
-            { id: "TK-109", desc: "IT Support: Configure New Server for App", person: "Anurag", dept: "IT & Digitalization", status: "Completed", target: "2025-05-15" },
-            { id: "TK-110", desc: "Chemical Training: Deliver 'Safe Handling' Seminar", person: "Avinash", dept: "Management", status: "Not Started", target: "2025-06-25" }
+        let actions = [
+            { id: 1, desc: "HAZOP Review: Cooling loop optimization", person: "Avinash Sir", dept: "Management", status: "In Progress", target: "2025-06-15" },
+            { id: 2, desc: "HAZOP Software Prototype", person: "Anurag", dept: "IT & Digitalization", status: "In Progress", target: "2025-06-01" },
+            { id: 3, desc: "Energy Audit: Plant efficiency final report", person: "Swapnil Sir", dept: "Management", status: "Completed", target: "2025-05-28" },
+            { id: 4, desc: "HPCL Pre-Hazop", person: "Saksham", dept: "Management", status: "Completed", target: "2025-05-28" }
         ];
 
-        // --- STATE ---
-        let currentTasks = [...initialTasks];
-        let nudgeCount = 0;
-        let chartInstances = {};
-        const SIMULATED_TODAY = new Date("2025-06-01");
+        let nudgeCount = 0; let chartInstances = {}; const TODAY = new Date("2025-06-01");
+        let activeNudgeContext = null; let taskToDeleteId = null;
 
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initFilters();
-            initCharts();
-            renderDashboard();
-        });
-
-        // --- CORE FUNCTIONS ---
-
-        function initFilters() {
-            const pFilter = document.getElementById('personFilter');
-            Object.keys(employees).forEach(name => {
-                let opt = document.createElement('option');
-                opt.value = name;
-                opt.innerText = name;
-                pFilter.appendChild(opt);
-            });
-
-            pFilter.addEventListener('change', handleFilter);
-            document.getElementById('deptFilter').addEventListener('change', handleFilter);
+        // --- UI CORE ---
+        function refresh() {
+            renderTable(); updateKPIs(); updateCharts();
         }
 
-        function handleFilter() {
-            const pVal = document.getElementById('personFilter').value;
-            const dVal = document.getElementById('deptFilter').value;
+        function renderTable() {
+            const tbody = document.getElementById('actionTable');
+            const pFiltEl = document.getElementById('personFilter');
+            const dFiltEl = document.getElementById('deptFilter');
+            if(!tbody) return;
 
-            currentTasks = initialTasks.filter(t => {
-                return (pVal === "All" || t.person === pVal) && (dVal === "All" || t.dept === dVal);
-            });
-            renderDashboard();
-        }
-
-        function triggerNudge(platform, personName, taskDesc) {
-            const emp = employees[personName];
-            const handle = platform === 'Slack' ? emp.slack : emp.discord;
-            const icon = platform === 'Slack' ? '💬' : '👾';
-            
-            // Create Toast
-            const toast = document.createElement('div');
-            toast.className = 'toast-item';
-            toast.innerHTML = `
-                <div class="text-2xl">${icon}</div>
-                <div>
-                    <p class="text-[10px] font-black uppercase text-slate-400">Sent via ${platform}</p>
-                    <p class="text-sm font-bold">Nudged ${personName}</p>
-                    <p class="text-xs text-slate-400 mt-1 truncate w-40">${taskDesc}</p>
-                </div>
-            `;
-            
-            document.getElementById('toast-container').appendChild(toast);
-            
-            // Animate In
-            setTimeout(() => toast.classList.add('show'), 10);
-            
-            // Update Stats
-            nudgeCount++;
-            document.getElementById('kpi-nudges').innerText = nudgeCount;
-
-            // Animate Out
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 400);
-            }, 3000);
-        }
-
-        function renderDashboard() {
-            // Render Table
-            const tbody = document.getElementById('actionTableBody');
+            const pFilt = pFiltEl ? pFiltEl.value : 'All';
+            const dFilt = dFiltEl ? dFiltEl.value : 'All';
             tbody.innerHTML = '';
-            
-            let completed = 0, overdue = 0;
+            const filtered = actions.filter(a => (pFilt === 'All' || a.person === pFilt) && (dFilt === 'All' || a.dept === dFilt));
 
-            currentTasks.forEach(task => {
-                const emp = employees[task.person];
-                
-                // Logic for overdue
-                let isLate = false;
-                if(task.status !== 'Completed') {
-                    if(new Date(task.target) < SIMULATED_TODAY || task.status === 'Overdue') {
-                        isLate = true;
-                        overdue++;
-                    }
-                }
-                if(task.status === 'Completed') completed++;
-
+            filtered.forEach(t => {
+                const spec = specialists[t.person];
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-50 last:border-0";
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-50";
                 tr.innerHTML = `
-                    <td class="px-6 py-4">
-                        <p class="text-xs font-bold text-slate-800">${task.desc}</p>
-                        <p class="text-[10px] text-slate-400 font-mono mt-0.5">${task.id}</p>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-                            <div class="w-6 h-6 rounded-md ${emp.bg} flex items-center justify-center text-[10px] font-bold shadow-sm">
-                                ${emp.avatar}
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-700">${task.person}</p>
-                                <p class="text-[9px] text-slate-400">${emp.role}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">${task.dept}</span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="tag ${getStatusClass(task.status)}">${task.status}</span>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="text-xs font-mono ${isLate ? 'text-red-600 font-bold' : 'text-slate-500'}">${task.target}</span>
-                    </td>
-                    <td class="px-6 py-4 bg-teal-50/30">
-                        <div class="flex justify-center gap-2">
-                            <button onclick="triggerNudge('Slack', '${task.person}', '${task.desc}')" 
-                                class="p-2 bg-white border border-slate-200 rounded-lg hover:border-[color:var(--ps-teal)] hover:text-[color:var(--ps-teal)] transition shadow-sm group" title="Slack">
-                                <span class="text-sm group-hover:scale-110 block transition">💬</span>
-                            </button>
-                            <button onclick="triggerNudge('Discord', '${task.person}', '${task.desc}')" 
-                                class="p-2 bg-white border border-slate-200 rounded-lg hover:border-indigo-500 hover:text-indigo-500 transition shadow-sm group" title="Discord">
-                                <span class="text-sm group-hover:scale-110 block transition">👾</span>
-                            </button>
-                        </div>
-                    </td>
+                    <td class="px-8 py-5"><p class="text-xs font-bold text-slate-800">${t.desc}</p><p class="text-[9px] text-slate-400 font-mono mt-0.5">PS-ID-0${t.id}</p></td>
+                    <td class="px-8 py-5"><div class="flex items-center gap-3 justify-center"><div class="w-8 h-8 rounded-lg ${spec.bg} flex items-center justify-center text-[10px] font-black shadow-sm">${spec.avatar}</div><div class="text-left"><p class="text-xs font-bold text-slate-700 leading-none">${t.person}</p><p class="text-[9px] text-slate-400 mt-1 uppercase font-bold tracking-tighter">${spec.role}</p></div></div></td>
+                    <td class="px-8 py-5 text-center"><span class="tag ${getStatusClass(t.status)}">${t.status}</span></td>
+                    <td class="px-8 py-5 text-center"><span class="text-[11px] font-mono font-bold">${t.target}</span></td>
+                    <td class="px-8 py-5 text-center"><div class="flex justify-center gap-2"><button onclick="editTask(${t.id})" class="p-2 bg-slate-100 hover:bg-ps-teal hover:text-white rounded-xl transition text-xs shadow-sm">✎</button><button onclick="openDeleteModal(${t.id})" class="p-2 bg-slate-100 hover:bg-red-600 hover:text-white rounded-xl transition text-xs shadow-sm">🗑</button></div></td>
+                    <td class="px-8 py-5 bg-teal-50/10 text-center"><div class="flex justify-center gap-4"><button onclick="openNudge('Slack', '${t.person}', '${t.desc}')" class="nudge-icon-btn text-xl">💬</button><button onclick="openNudge('Discord', '${t.person}', '${t.desc}')" class="nudge-icon-btn text-xl">👾</button></div></td>
                 `;
                 tbody.appendChild(tr);
             });
-
-            // Update KPIs
-            document.getElementById('kpi-total').innerText = currentTasks.length;
-            document.getElementById('kpi-overdue').innerText = overdue;
-            const rate = currentTasks.length > 0 ? Math.round((completed / currentTasks.length) * 100) : 0;
-            document.getElementById('kpi-rate').innerText = rate + '%';
-
-            updateCharts();
         }
 
-        function getStatusClass(status) {
-            switch(status) {
-                case 'Completed': return 'status-completed';
-                case 'In Progress': return 'status-progress';
-                case 'Overdue': return 'status-overdue';
-                default: return 'status-pending';
-            }
+        function updateKPIs() {
+            const completed = actions.filter(a => a.status === 'Completed').length;
+            const overdue = actions.filter(a => a.status !== 'Completed' && (new Date(a.target) < TODAY || a.status === 'Overdue')).length;
+            document.getElementById('statTotal').innerText = actions.length;
+            document.getElementById('statRate').innerText = actions.length ? Math.round((completed/actions.length)*100)+'%' : '0%';
+            document.getElementById('statLate').innerText = overdue;
+            document.getElementById('statSyncs').innerText = nudgeCount;
         }
 
-        // --- CHARTS ---
+        // --- CRUD LOGIC ---
+        function openModal(isEdit = false) {
+            const m = document.getElementById('taskModal');
+            document.getElementById('modalTitle').innerText = isEdit ? "Modify Action Detail" : "Register Industrial Action";
+            if(!isEdit) { document.getElementById('taskForm').reset(); document.getElementById('editTaskId').value = ''; }
+            m.classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('taskModalContent').classList.remove('scale-95');
+        }
+        function closeModal() { document.getElementById('taskModal').classList.add('opacity-0', 'pointer-events-none'); document.getElementById('taskModalContent').classList.add('scale-95'); }
+        function saveTask(e) {
+            e.preventDefault();
+            const id = document.getElementById('editTaskId').value;
+            const taskObj = {
+                id: id ? parseInt(id) : (actions.length ? Math.max(...actions.map(t => t.id)) + 1 : 1),
+                desc: document.getElementById('formDesc').value,
+                person: document.getElementById('formOwner').value,
+                dept: document.getElementById('formDept').value,
+                status: document.getElementById('formStatus').value,
+                target: document.getElementById('formDate').value
+            };
+            if(id) { const idx = actions.findIndex(t => t.id === parseInt(id)); actions[idx] = taskObj; notify('UPDATE', 'Revised.'); }
+            else { actions.push(taskObj); notify('CREATED', 'Assigned.'); document.getElementById('personFilter').value = 'All'; document.getElementById('deptFilter').value = 'All'; }
+            closeModal(); refresh();
+        }
+        function editTask(id) {
+            const t = actions.find(a => a.id === id);
+            document.getElementById('editTaskId').value = t.id;
+            document.getElementById('formDesc').value = t.desc;
+            document.getElementById('formOwner').value = t.person;
+            document.getElementById('formDept').value = t.dept;
+            document.getElementById('formStatus').value = t.status;
+            document.getElementById('formDate').value = t.target;
+            openModal(true);
+        }
+        function openDeleteModal(id) {
+            taskToDeleteId = id;
+            document.getElementById('deleteModal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+        function closeDeleteModal() { document.getElementById('deleteModal').classList.add('opacity-0', 'pointer-events-none'); }
+        document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+            if(taskToDeleteId) { actions = actions.filter(t => t.id !== taskToDeleteId); refresh(); notify('DELETED', 'Record removed.'); }
+            closeDeleteModal();
+        });
+
+        // --- NUDGES ---
+        function openNudge(plat, name, task) {
+            activeNudgeContext = { plat, name, task };
+            document.getElementById('nudgePlatform').innerText = plat;
+            document.getElementById('nudgeTarget').innerText = name + ' (' + specialists[name].slack + ')';
+            document.getElementById('nudgeMessageInput').value = `Hello ${name.split(' ')[0]}, requesting update on industrial task: "${task}". Status is ${actions.find(a=>a.desc === task).status}.`;
+            document.getElementById('nudgeModal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+        function closeNudge() { document.getElementById('nudgeModal').classList.add('opacity-0', 'pointer-events-none'); }
+        function confirmNudge() { nudgeCount++; notify('NUDGE SENT', 'Dispatched.'); closeNudge(); refresh(); }
+
+        function notify(title, msg) {
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = 'toast-item';
+            t.innerHTML = `<span>💡</span><div><p class="text-[9px] font-black uppercase text-slate-500 tracking-tighter">${title}</p><p class="text-[11px] font-bold">${msg}</p></div>`;
+            c.appendChild(t); setTimeout(() => t.classList.add('show'), 10);
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3000);
+        }
+
+        function getStatusClass(s) {
+            const m = { 'Completed': 'st-completed', 'In Progress': 'st-progress', 'Overdue': 'st-overdue' };
+            return m[s] || 'st-notstarted';
+        }
+
         function initCharts() {
             Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-            Chart.defaults.color = '#64748b';
-            
-            // Status Chart
             const ctx1 = document.getElementById('statusChart').getContext('2d');
             chartInstances.status = new Chart(ctx1, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Completed', 'In Progress', 'Overdue', 'Not Started'],
-                    datasets: [{
-                        data: [0,0,0,0],
-                        backgroundColor: ['#10b981', '#0ea5e9', '#ef4444', '#cbd5e1'],
-                        borderWidth: 0,
-                        hoverOffset: 10
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '75%',
-                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 6 } } }
-                }
+                type: 'doughnut', data: { labels: ['Done', 'Progress', 'Late', 'Wait'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#10b981', '#0ea5e9', '#ef4444', '#cbd5e1'], borderWidth: 0, hoverOffset: 15 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 6, font: { weight: 'bold', size: 10 } } } } }
             });
-
-            // Workload Chart
             const ctx2 = document.getElementById('workloadChart').getContext('2d');
             chartInstances.workload = new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Assigned Tasks',
-                        data: [],
-                        backgroundColor: '#00b8b8',
-                        borderRadius: 4,
-                        barThickness: 20
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { beginAtZero: true, grid: { display: false } },
-                        y: { grid: { display: false } }
-                    }
-                }
+                type: 'bar', data: { labels: [], datasets: [{ data: [], backgroundColor: '#00b8b8', borderRadius: 8, barThickness: 24 }] },
+                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true }, y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } } } }
             });
         }
 
         function updateCharts() {
-            // Process Data
-            const statusCounts = { 'Completed': 0, 'In Progress': 0, 'Overdue': 0, 'Not Started': 0 };
-            const personCounts = {};
-
-            currentTasks.forEach(t => {
-                let s = t.status;
-                if(s === 'Overdue') statusCounts['Overdue']++;
-                else statusCounts[s]++;
-
-                personCounts[t.person] = (personCounts[t.person] || 0) + 1;
-            });
-
-            // Update Status Chart
-            chartInstances.status.data.datasets[0].data = Object.values(statusCounts);
+            const counts = { 'Completed': 0, 'In Progress': 0, 'Overdue': 0, 'Not Started': 0 };
+            actions.forEach(a => counts[a.status]++);
+            chartInstances.status.data.datasets[0].data = Object.values(counts);
             chartInstances.status.update();
-
-            // Update Workload Chart
-            chartInstances.workload.data.labels = Object.keys(personCounts);
-            chartInstances.workload.data.datasets[0].data = Object.values(personCounts);
+            const workloads = {};
+            actions.forEach(a => workloads[a.person] = (workloads[a.person] || 0) + 1);
+            chartInstances.workload.data.labels = Object.keys(workloads);
+            chartInstances.workload.data.datasets[0].data = Object.values(workloads);
             chartInstances.workload.update();
         }
 
+        window.onload = () => {
+            const fOwner = document.getElementById('formOwner');
+            const pFilt = document.getElementById('personFilter');
+            Object.keys(specialists).forEach(n => {
+                if(fOwner) fOwner.innerHTML += `<option value="${n}">${n}</option>`;
+                if(pFilt) pFilt.innerHTML += `<option value="${n}">${n}</option>`;
+            });
+            if(pFilt) pFilt.innerHTML = `<option value="All">ALL SPECIALISTS</option>` + pFilt.innerHTML;
+            if(pFilt) pFilt.addEventListener('change', refresh);
+            document.getElementById('deptFilter').addEventListener('change', refresh);
+            document.getElementById('taskForm').addEventListener('submit', saveTask);
+            initCharts(); refresh();
+        };
     </script>
 </body>
 </html>
